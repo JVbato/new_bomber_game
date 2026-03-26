@@ -1,7 +1,7 @@
 from common_types import Scenario, BombType, BasicMovement
 from random import Random
 
-class SolidExplosion:
+class HollowExplosion:
     def __init__(self, n: int, loc: tuple[int, int]) -> None:
         self._n = n
         self._loc = loc
@@ -25,6 +25,36 @@ class SolidExplosion:
         for row in range(self._n):
             for col in range(self._n):
                 if abs(self._loc[0] - row) + abs(self._loc[1] - col) <= self._r:
+                    explosion.add((row, col))
+        return explosion
+    
+    def tick(self) -> None:
+        self._timer -= 1
+
+class SolidExplosion:
+    def __init__(self, n: int, loc: tuple[int, int]) -> None:
+        self._n = n
+        self._loc = loc
+        self._r = 2
+        self._timer = 4
+    
+    def __str__(self) -> str:
+        if self.is_done():
+            return "."
+        else:
+            return str(self._timer)
+        
+    def is_done(self) -> bool:
+        if self._timer <= 0:
+            return True
+        else:
+            return False
+        
+    def explode(self) -> set[tuple[int, int]]:
+        explosion: set[tuple[int, int]] = set()
+        for row in range(self._n):
+            for col in range(self._n):
+                if abs(self._loc[0] - row) + abs(self._loc[1] - col) == self._r:
                     explosion.add((row, col))
         return explosion
     
